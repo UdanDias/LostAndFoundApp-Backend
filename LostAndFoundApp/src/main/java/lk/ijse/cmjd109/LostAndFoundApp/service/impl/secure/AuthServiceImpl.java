@@ -40,6 +40,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtAuthResponse signUp(UserRegisterDTO signUp) {
+
+
+
         signUp.setUserId(UtilData.generateUserRegisterId());
         signUp.setPassword(passwordEncoder.encode(signUp.getPassword()));
         var savedRegisteredUser=userRegisterDao.save(entityDTOConvert.convertUserRegisterDTOToUserRegisterEntity(signUp));

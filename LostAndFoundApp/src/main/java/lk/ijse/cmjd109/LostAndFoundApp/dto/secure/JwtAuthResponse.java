@@ -11,6 +11,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Data
 @Builder
-public class JwtAuthResponse implements Serializable {
+public class JwtAuthResponse  {
     private String token;
 }

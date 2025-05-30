@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
     @PostMapping("signin")
-    public ResponseEntity<JwtAuthResponse>signIn(UserLoginDTO signIn) {
+    public ResponseEntity<JwtAuthResponse>signIn(@RequestBody UserLoginDTO signIn) {
         return new ResponseEntity<>(authService.signIn(signIn),HttpStatus.OK);
     }
     @PostMapping("signup")
-    public ResponseEntity<JwtAuthResponse>signUp(UserRegisterDTO signUp) {
+    public ResponseEntity<JwtAuthResponse>signUp(@RequestBody UserRegisterDTO signUp) {
         return new ResponseEntity<>(authService.signUp(signUp),HttpStatus.CREATED);
     }
 }
