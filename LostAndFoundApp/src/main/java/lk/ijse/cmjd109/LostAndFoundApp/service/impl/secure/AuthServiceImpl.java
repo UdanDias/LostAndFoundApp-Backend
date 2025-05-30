@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     public JwtAuthResponse signIn(UserLoginDTO signIn) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signIn.getEmail(), signIn.getPassword()));
-                var userByEmail=userRegisterDao.findByEmail(signIn.getEmail()).orElseThrow(()->new UsernameNotFoundException("User not found"))
+                var userByEmail=userRegisterDao.findByEmail(signIn.getEmail()).orElseThrow(()->new UsernameNotFoundException("User not found"));
                 var generatedToken=jwtUtils.generateToken(userByEmail.getEmail(),userByEmail.getAuthorities());
                 return JwtAuthResponse.builder().token(generatedToken).build();
 
