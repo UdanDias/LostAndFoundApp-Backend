@@ -3,9 +3,11 @@ package lk.ijse.cmjd109.LostAndFoundApp.util;
 import lk.ijse.cmjd109.LostAndFoundApp.dto.ItemDTO;
 import lk.ijse.cmjd109.LostAndFoundApp.dto.RequestDTO;
 import lk.ijse.cmjd109.LostAndFoundApp.dto.UserDTO;
+import lk.ijse.cmjd109.LostAndFoundApp.dto.secure.UserRegisterDTO;
 import lk.ijse.cmjd109.LostAndFoundApp.entities.ItemEntity;
 import lk.ijse.cmjd109.LostAndFoundApp.entities.RequestEntity;
 import lk.ijse.cmjd109.LostAndFoundApp.entities.UserEntity;
+import lk.ijse.cmjd109.LostAndFoundApp.entities.secure.UserRegisterEntity;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -47,5 +49,12 @@ public class EntityDTOConvert {
     }
     public List<UserDTO> convertUserEntityListToUserDTOList(List<UserEntity>userEntityList){
         return modelMapper.map(userEntityList,new TypeToken<List<UserDTO>>(){}.getType());
+    }
+
+    public UserRegisterEntity convertUserRegisterDTOToUserRegisterEntity(UserRegisterDTO userRegisterDTO) {
+        return modelMapper.map(userRegisterDTO, UserRegisterEntity.class);
+    }
+    public UserRegisterDTO convertUserRegisterEntityToUserRegisterDTO(UserRegisterEntity userRegisterEntity) {
+        return modelMapper.map(userRegisterEntity, UserRegisterDTO.class);
     }
 }
