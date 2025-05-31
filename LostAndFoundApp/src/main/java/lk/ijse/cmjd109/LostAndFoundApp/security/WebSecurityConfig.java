@@ -54,8 +54,11 @@ public class WebSecurityConfig {
                 .cors(cors ->cors.configurationSource(corsConfig.corsConfigurationSource()))
                 .exceptionHandling(exception->exception.authenticationEntryPoint(authEntryPoint))
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth->auth.requestMatchers("/api/v1/auth/**").permitAll().
-                        anyRequest().authenticated());
+                .authorizeHttpRequests(auth->auth
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+                                .requestMatchers("/api/v1/user/getallusers").hasRole("ADMIN")
+                                .requestMatchers("/api/v1/user/getallusers").hasRole("ADMIN")
+                                .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
