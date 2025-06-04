@@ -24,6 +24,8 @@ public interface RequestDao extends JpaRepository <RequestEntity,String>{
     // Count requests by status for a specific user
     @Query("SELECT COUNT(r) FROM RequestEntity r WHERE r.user.userId = :userId AND r.requestStatus = :status")
     long countByRequestStatusAndUserId(@Param("userId") String userId, @Param("status") RequestStatus status);
+//    @Query("SELECT COUNT(r) FROM RequestEntity r WHERE r.user.userId = :userId AND r.requestStatus = :status")
+//    long countByRequestStatusAndUserId(@Param("userId") String userId, @Param("status") RequestStatus status);
 
 
 }
