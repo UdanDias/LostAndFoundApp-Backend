@@ -51,15 +51,25 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public void updateRequest(String requestId, RequestDTO requestDTO) {
-        var requestEntity=requestDao.findById(requestId).orElseThrow(()->new RequestNotFoundException("Request Not Found"));
-        requestEntity.setIsActiveRequest(requestDTO.getIsActiveRequest());
+        var requestEntity = requestDao.findById(requestId)
+                .orElseThrow(() -> new RequestNotFoundException("Request Not Found"));
+
         requestEntity.setRequestStatus(requestDTO.getRequestStatus());
+
+        // Automatically deactivate if request is rejected
+        if (requestDTO.getRequestStatus() == RequestStatus.REJECTED) {
+            requestEntity.setIsActiveRequest(false);
+        } else {
+            requestEntity.setIsActiveRequest(requestDTO.getIsActiveRequest());
+        }
+
         requestEntity.setRequestedDate(requestDTO.getRequestedDate());
         requestEntity.setRequestedTime(requestDTO.getRequestedTime());
         requestEntity.setUpdatedDate(UtilData.generateTodayDate());
         requestEntity.setUpdatedTime(UtilData.generateCurrentTime());
         requestEntity.setReward(requestDTO.getReward());
     }
+
 
     @Override
     public void deleteRequest(String requestId) {

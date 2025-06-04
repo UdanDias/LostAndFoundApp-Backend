@@ -1,12 +1,16 @@
-package lk.ijse.cmjd109.LostAndFoundApp.controller;
+package lk.ijse.cmjd109.LostAndFoundApp.controller.secure;
 
-import lk.ijse.cmjd109.LostAndFoundApp.dto.UserDTO;
+import lk.ijse.cmjd109.LostAndFoundApp.dto.secure.UserDTO;
+import lk.ijse.cmjd109.LostAndFoundApp.dto.secure.JwtAuthResponse;
+import lk.ijse.cmjd109.LostAndFoundApp.dto.secure.UserLoginDTO;
+//import lk.ijse.cmjd109.LostAndFoundApp.dto.secure.UserRegisterDTO;
 import lk.ijse.cmjd109.LostAndFoundApp.exceptions.UserNotFoundException;
-import lk.ijse.cmjd109.LostAndFoundApp.service.UserService;
+import lk.ijse.cmjd109.LostAndFoundApp.service.secure.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,20 +22,8 @@ public class UserController {
     private final UserService userService;
 
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addUser(@RequestBody UserDTO userDTO){
-        if(userDTO==null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        try {
-            userService.addUser(userDTO);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    @DeleteMapping
+    @DeleteMapping("deleteuser")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void>deleteUser(@RequestParam("userId")String userId){
         if(userId==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -47,7 +39,8 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "updateuser", consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+//    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void>updateUser(@RequestParam("userId")String userId,@RequestBody UserDTO userDTO){
         if(userId==null||userDTO==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -63,7 +56,8 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping
+    @GetMapping("getuser")
+
     public ResponseEntity<UserDTO>getUser(@RequestParam("userId")String userId){
         if (userId==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -79,6 +73,8 @@ public class UserController {
         }
     }
     @GetMapping("getallusers")
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+
     public ResponseEntity<List<UserDTO>> getAllUsers(){
 
         try {
@@ -90,6 +86,15 @@ public class UserController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @PostMapping("signin")
+    public ResponseEntity<JwtAuthResponse>signIn(@RequestBody UserLoginDTO signIn) {
+        return new ResponseEntity<>(userService.signIn(signIn),HttpStatus.OK);
+    }
+    @PostMapping("signup")
+
+    public ResponseEntity<JwtAuthResponse>signUp(@RequestBody UserDTO signUp) {
+        return new ResponseEntity<>(userService.signUp(signUp),HttpStatus.CREATED);
     }
 
 }

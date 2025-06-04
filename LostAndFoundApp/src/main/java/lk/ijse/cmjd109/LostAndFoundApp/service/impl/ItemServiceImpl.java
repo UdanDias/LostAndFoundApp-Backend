@@ -4,6 +4,7 @@ import lk.ijse.cmjd109.LostAndFoundApp.dao.ItemDao;
 import lk.ijse.cmjd109.LostAndFoundApp.dao.security.UserDao;
 import lk.ijse.cmjd109.LostAndFoundApp.dto.ItemDTO;
 import lk.ijse.cmjd109.LostAndFoundApp.dto.enums.ItemStatus;
+import lk.ijse.cmjd109.LostAndFoundApp.entities.RequestEntity;
 import lk.ijse.cmjd109.LostAndFoundApp.entities.secure.UserEntity;
 import lk.ijse.cmjd109.LostAndFoundApp.exceptions.ItemNotFoundException;
 import lk.ijse.cmjd109.LostAndFoundApp.exceptions.UserNotFoundException;
@@ -37,7 +38,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void updateItem(String itemId, ItemDTO itemDTO) {
-        var itemEntity=itemDao.findById(itemId).orElseThrow(()->new ItemNotFoundException("Item not found"));
+        var itemEntity = itemDao.findById(itemId)
+                .orElseThrow(() -> new ItemNotFoundException("Item not found"));
+
         itemEntity.setItemName(itemDTO.getItemName());
         itemEntity.setDescription(itemDTO.getDescription());
         itemEntity.setColor(itemDTO.getColor());
@@ -45,7 +48,16 @@ public class ItemServiceImpl implements ItemService {
         itemEntity.setItemStatus(itemDTO.getItemStatus());
         itemEntity.setLostDate(itemDTO.getLostDate());
 
+        // If item is claimed, set all related requests to inactive
+        if (itemDTO.getItemStatus() == ItemStatus.CLAIMED) {
+            if (itemEntity.getRequests() != null) {
+                for (RequestEntity request : itemEntity.getRequests()) {
+                    request.setIsActiveRequest(false);
+                }
+            }
+        }
     }
+
 
     @Override
     public void deleteItem(String itemId) {
