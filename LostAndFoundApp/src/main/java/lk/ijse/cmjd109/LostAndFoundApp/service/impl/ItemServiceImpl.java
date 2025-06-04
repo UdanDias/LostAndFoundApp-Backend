@@ -1,9 +1,10 @@
 package lk.ijse.cmjd109.LostAndFoundApp.service.impl;
 
 import lk.ijse.cmjd109.LostAndFoundApp.dao.ItemDao;
-import lk.ijse.cmjd109.LostAndFoundApp.dao.UserDao;
+import lk.ijse.cmjd109.LostAndFoundApp.dao.security.UserDao;
 import lk.ijse.cmjd109.LostAndFoundApp.dto.ItemDTO;
-import lk.ijse.cmjd109.LostAndFoundApp.entities.UserEntity;
+import lk.ijse.cmjd109.LostAndFoundApp.dto.enums.ItemStatus;
+import lk.ijse.cmjd109.LostAndFoundApp.entities.secure.UserEntity;
 import lk.ijse.cmjd109.LostAndFoundApp.exceptions.ItemNotFoundException;
 import lk.ijse.cmjd109.LostAndFoundApp.exceptions.UserNotFoundException;
 import lk.ijse.cmjd109.LostAndFoundApp.service.ItemService;
@@ -25,6 +26,7 @@ public class ItemServiceImpl implements ItemService {
     public void addItem(ItemDTO itemDTO) {
 
         itemDTO.setItemId(UtilData.generateItemId());
+        itemDTO.setItemStatus(ItemStatus.LOST);
         System.out.println(itemDTO);
 
         UserEntity userEntity=userDao.findById(itemDTO.getUserId()).orElseThrow(()->new UserNotFoundException("User Not Found"));

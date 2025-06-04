@@ -54,8 +54,26 @@ public class WebSecurityConfig {
                 .cors(cors ->cors.configurationSource(corsConfig.corsConfigurationSource()))
                 .exceptionHandling(exception->exception.authenticationEntryPoint(authEntryPoint))
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth->auth.requestMatchers("/api/v1/auth/**").permitAll().
-                        anyRequest().authenticated());
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/v1/item/deleteitem").hasAnyRole("ADMIN","STAFF")
+                        .requestMatchers("/api/v1/item/edititem").hasAnyRole("ADMIN","STAFF")
+                        .requestMatchers("/api/v1/request/deleterequest").hasAnyRole("ADMIN","STAFF")
+//                        .requestMatchers("/api/v1/request/editrequest").hasAnyRole("ADMIN","STAFF")
+                        .requestMatchers("/api/v1/request/editrequest").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/user/getallusers").hasAnyRole("ADMIN","STAFF")
+                        .requestMatchers("/api/v1/user/deleteuser").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/user/signin", "/api/v1/user/signup").permitAll()
+
+                        // ✅ These must come *after* the specific ones
+                        .requestMatchers("/api/v1/item/**").authenticated()
+                        .requestMatchers("/api/v1/request/**").authenticated()
+                        .requestMatchers("/api/v1/user/**").authenticated()
+
+                        .anyRequest().authenticated()
+                );
+
+//                        .anyRequest().permitAll());
+
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);

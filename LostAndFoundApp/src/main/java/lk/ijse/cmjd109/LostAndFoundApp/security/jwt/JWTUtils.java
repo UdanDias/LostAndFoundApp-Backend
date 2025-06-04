@@ -4,7 +4,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.modelmapper.internal.bytebuddy.asm.Advice;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,13 +21,14 @@ public class JWTUtils {
     private Key key(){
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(signkey));
     }
-    public String generateToken(String userName, Collection<?extends GrantedAuthority>authorities){
+    public String generateToken(String userId,String userName, Collection<?extends GrantedAuthority>authorities){
         String roles=authorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
         return Jwts.builder()
                 .setSubject(userName)
+                .claim("userId",userId)
                 .claim("roles",roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000*60*60*24))
@@ -52,5 +53,17 @@ public class JWTUtils {
                 .getBody().getSubject();
 
     }
+    public String getUserIdFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(key()).build()
+                .parseSignedClaims(token)
+                .getBody()
+                .get("userId", String.class);
+    }
+
+
+
+
+
 
 }

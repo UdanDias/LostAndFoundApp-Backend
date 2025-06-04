@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -32,7 +33,8 @@ public class ItemController {
         }
 
     }
-    @DeleteMapping
+    @DeleteMapping("/deleteitem")
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
     public ResponseEntity<Void>deleteItem(@RequestParam("itemId") String itemId){
         if(itemId==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -49,7 +51,8 @@ public class ItemController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PatchMapping( consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+    @PatchMapping( value = "updateitem", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateItem(@RequestParam("itemId") String itemId,@RequestBody ItemDTO itemDTO){
         if(itemId==null||itemDTO==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

@@ -2,6 +2,7 @@ package lk.ijse.cmjd109.LostAndFoundApp.entities;
 
 import jakarta.persistence.*;
 import lk.ijse.cmjd109.LostAndFoundApp.dto.enums.ItemStatus;
+import lk.ijse.cmjd109.LostAndFoundApp.entities.secure.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class ItemEntity {
     private String description;
     private String color;
     private String locationFound;
+//    @Enumerated(EnumType.STRING)
     private ItemStatus itemStatus;
     private String lostDate;
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)

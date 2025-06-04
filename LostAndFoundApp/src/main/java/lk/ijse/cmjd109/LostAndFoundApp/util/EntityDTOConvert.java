@@ -2,12 +2,12 @@ package lk.ijse.cmjd109.LostAndFoundApp.util;
 
 import lk.ijse.cmjd109.LostAndFoundApp.dto.ItemDTO;
 import lk.ijse.cmjd109.LostAndFoundApp.dto.RequestDTO;
-import lk.ijse.cmjd109.LostAndFoundApp.dto.UserDTO;
-import lk.ijse.cmjd109.LostAndFoundApp.dto.secure.UserRegisterDTO;
+import lk.ijse.cmjd109.LostAndFoundApp.dto.secure.UserDTO;
+//import lk.ijse.cmjd109.LostAndFoundApp.dto.secure.UserRegisterDTO;
 import lk.ijse.cmjd109.LostAndFoundApp.entities.ItemEntity;
 import lk.ijse.cmjd109.LostAndFoundApp.entities.RequestEntity;
-import lk.ijse.cmjd109.LostAndFoundApp.entities.UserEntity;
-import lk.ijse.cmjd109.LostAndFoundApp.entities.secure.UserRegisterEntity;
+import lk.ijse.cmjd109.LostAndFoundApp.entities.secure.UserEntity;
+//import lk.ijse.cmjd109.LostAndFoundApp.entities.secure.UserRegisterEntity;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -42,6 +42,7 @@ public class EntityDTOConvert {
 
 
     public UserEntity convertUserDTOToUserEntity(UserDTO userDTO) {
+
         return modelMapper.map(userDTO, UserEntity.class);
     }
     public UserDTO convertUserEntityToUserDTO(UserEntity userEntity) {
@@ -51,10 +52,10 @@ public class EntityDTOConvert {
         return modelMapper.map(userEntityList,new TypeToken<List<UserDTO>>(){}.getType());
     }
 
-    public UserRegisterEntity convertUserRegisterDTOToUserRegisterEntity(UserRegisterDTO userRegisterDTO) {
-        return modelMapper.map(userRegisterDTO, UserRegisterEntity.class);
-    }
-    public UserRegisterDTO convertUserRegisterEntityToUserRegisterDTO(UserRegisterEntity userRegisterEntity) {
-        return modelMapper.map(userRegisterEntity, UserRegisterDTO.class);
-    }
+//    public UserRegisterEntity convertUserRegisterDTOToUserRegisterEntity(UserRegisterDTO userRegisterDTO) {
+//        return modelMapper.map(userRegisterDTO, UserRegisterEntity.class);
+//    }
+//    public UserRegisterDTO convertUserRegisterEntityToUserRegisterDTO(UserRegisterEntity userRegisterEntity) {
+//        return modelMapper.map(userRegisterEntity, UserRegisterDTO.class);
+//    }
 }

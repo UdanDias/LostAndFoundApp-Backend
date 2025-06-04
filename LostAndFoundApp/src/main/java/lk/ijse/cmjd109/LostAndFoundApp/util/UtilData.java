@@ -22,7 +22,7 @@ public class UtilData {
     public static Time generateCurrentTime(){
         return Time.valueOf(LocalTime.now());
     }
-    public static String generateUserRegisterId(){
-        return "UR/"+ UUID.randomUUID();
-    }
+//    public static String generateUserRegisterId(){
+//        return "UR/"+ UUID.randomUUID();
+//    }
 }

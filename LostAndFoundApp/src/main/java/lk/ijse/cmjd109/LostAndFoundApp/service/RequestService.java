@@ -11,4 +11,7 @@ public interface RequestService {
     void deleteRequest(String requestId);
     RequestDTO getRequest(String requestId);
     List<RequestDTO> getAllRequests();
+
+    List<RequestDTO> getRequestsByUserId(String userId);
+
 }

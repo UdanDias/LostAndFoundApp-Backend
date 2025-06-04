@@ -3,11 +3,12 @@ package lk.ijse.cmjd109.LostAndFoundApp.service.impl;
 import jakarta.transaction.Transactional;
 import lk.ijse.cmjd109.LostAndFoundApp.dao.ItemDao;
 import lk.ijse.cmjd109.LostAndFoundApp.dao.RequestDao;
-import lk.ijse.cmjd109.LostAndFoundApp.dao.UserDao;
-import lk.ijse.cmjd109.LostAndFoundApp.dto.ItemDTO;
+import lk.ijse.cmjd109.LostAndFoundApp.dao.security.UserDao;
 import lk.ijse.cmjd109.LostAndFoundApp.dto.RequestDTO;
+import lk.ijse.cmjd109.LostAndFoundApp.dto.enums.RequestStatus;
 import lk.ijse.cmjd109.LostAndFoundApp.entities.ItemEntity;
-import lk.ijse.cmjd109.LostAndFoundApp.entities.UserEntity;
+import lk.ijse.cmjd109.LostAndFoundApp.entities.RequestEntity;
+import lk.ijse.cmjd109.LostAndFoundApp.entities.secure.UserEntity;
 import lk.ijse.cmjd109.LostAndFoundApp.exceptions.ItemNotFoundException;
 import lk.ijse.cmjd109.LostAndFoundApp.exceptions.RequestNotFoundException;
 import lk.ijse.cmjd109.LostAndFoundApp.exceptions.UserNotFoundException;
@@ -18,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +35,9 @@ public class RequestServiceImpl implements RequestService {
         requestDTO.setRequestedDate(UtilData.generateTodayDate());
         requestDTO.setRequestedTime(UtilData.generateCurrentTime());
         requestDTO.setIsActiveRequest(true);
+        requestDTO.setRequestStatus(RequestStatus.PENDING);
+        requestDTO.setUpdatedDate(UtilData.generateTodayDate());
+        requestDTO.setUpdatedTime(UtilData.generateCurrentTime());
 
         UserEntity userEntity=userDao.findById(requestDTO.getUserId()).orElseThrow(()->new UserNotFoundException("User Not Found"));
         ItemEntity itemEntity=itemDao.findById(requestDTO.getItemId()).orElseThrow(()->new ItemNotFoundException("Item Not Found"));
@@ -53,6 +56,8 @@ public class RequestServiceImpl implements RequestService {
         requestEntity.setRequestStatus(requestDTO.getRequestStatus());
         requestEntity.setRequestedDate(requestDTO.getRequestedDate());
         requestEntity.setRequestedTime(requestDTO.getRequestedTime());
+        requestEntity.setUpdatedDate(UtilData.generateTodayDate());
+        requestEntity.setUpdatedTime(UtilData.generateCurrentTime());
         requestEntity.setReward(requestDTO.getReward());
     }
 
@@ -72,4 +77,16 @@ public class RequestServiceImpl implements RequestService {
     public List<RequestDTO> getAllRequests() {
         return entityDTOConvert.convertRequestEntityListToRequestDTOList(requestDao.findAll());
     }
+
+    @Override
+    public List<RequestDTO> getRequestsByUserId(String userId) {
+        List<RequestEntity> requests = requestDao.findByUserUserId(userId);
+
+        if (requests.isEmpty()) {
+            throw new RequestNotFoundException("No requests found for user ID: " + userId);
+        }
+
+        return entityDTOConvert.convertRequestEntityListToRequestDTOList(requests);
+    }
+
 }
